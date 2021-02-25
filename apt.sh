@@ -1,5 +1,12 @@
 #!/bin/sh
 
+#################################################################################
+#	Filename:		~/Documents/GitHub/dot_files/apt.sh							#
+#	Purpose:		file that manage the package manager apt					#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
+
 function apt-clear {
 	sudo apt autoclean; sudo apt autoremove; sudo apt clean all
 }

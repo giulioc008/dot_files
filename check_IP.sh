@@ -1,5 +1,13 @@
 #! /bin/sh
-# path/checkIP.sh --post <true|false>
+
+#################################################################################
+#	Filename:		~/Documents/GitHub/dot_files/check_IP.sh					#
+#	Purpose:		script that checks the public IP of the router				#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
+
+# ~/Documents/GitHub/dot_files/check_IP.sh --post <true|false>
 
 red_background='\[\e[41m\]'
 white='\[\e[0;37m\]'
@@ -34,7 +42,7 @@ IFS=$saved_IFS																	# restore the IFS
 path_ip="${HOME}/ip.txt"														# set the path of the output file
 path_ftp="${HOME}/ftp.txt"														# set the path of the ftp file
 
-if [ $have_to_post = 'true' ]													# check if the have_to_post is true
+if [ ! -n $have_to_post ] && [ $have_to_post = 'true' ]							# check if the have_to_post is true
 then
 	echo 'ascii' > $path_ftp
 	echo 'bell' >> $path_ftp
@@ -67,7 +75,7 @@ unset saved_IFS
 echo $word > $path_ip
 date >> $path_ip
 
-if [ $have_to_post = 'true' ]													# check if the have_to_post is true
+if [ ! -n $have_to_post ] && [ $have_to_post = 'true' ]							# check if the have_to_post is true
 then
 	echo "send ${path_ip} MY_PATH" >> $path_ftp
 	echo 'bye' >> $path_ftp

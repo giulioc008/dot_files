@@ -1,5 +1,12 @@
 #!/bin/sh
 
+#################################################################################
+#	Filename:		~/Documents/GitHub/dot_files/kill.sh						#
+#	Purpose:		file that manage kill and killall							#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
+
 function kill-kill {
 	killall -s KILL -v -I $1
 }

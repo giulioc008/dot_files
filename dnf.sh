@@ -1,5 +1,12 @@
 #!/bin/sh
 
+#################################################################################
+#	Filename:		~/Documents/GitHub/dot_files/dnf.sh							#
+#	Purpose:		file that manage the package manager dnf					#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
+
 function dnf-clear {
 	sudo dnf autoremove; sudo dnf clean all
 }

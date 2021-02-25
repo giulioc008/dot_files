@@ -3809,12 +3809,8 @@ zrclocal
 
 # User specific aliases and functions
 ## Colors
-blue='\[\e[0;34m\]'
-red='\[\e[0;31m\]'
 red_background='\[\e[41m\]'
 white='\[\e[0;37m\]'
-
-reset='\[\e[0m\]'														# reset the color to the default value
 
 ## Aliases
 alias cd..='cd ..'
@@ -3826,9 +3822,13 @@ export NVM_DIR="$HOME/.nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 					# This loads nvm
 	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"	# This loads nvm bash_completion
 
+# Uncomment the line that load the script that manage yout package manager
 source ~/Documents/GitHub/dot_files/apt.sh								# include the Shell Script that manage apt
+#source ~/Documents/GitHub/dot_files/dnf.sh								# include the Shell Script that manage dnf
+#source ~/Documents/GitHub/dot_files/pacman.sh							# include the Shell Script that manage pacman
+
 source ~/Documents/GitHub/dot_files/git.sh								# include the Shell Script that manage git
-source ~/Documents/GitHub/dot_files/kill.sh								# include the Shell Script that manage the background processes
+source ~/Documents/GitHub/dot_files_KDE/kill.sh							# include the Shell Script that manage the background processes
 
 rm -rf ~/.zsh_history													# erasing the history of the shell
 clear																	# clearing the shell

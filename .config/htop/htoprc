@@ -1,3 +1,10 @@
+#################################################################################
+#	Filename:		~/.config/htop/htoprc										#
+#	Purpose:		config file for htop										#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
+
 # Beware! This file is rewritten by htop when settings are changed in the interface.
 # The parser is also very primitive, and not human-friendly.
 fields=0 3 48 2 46 47 1

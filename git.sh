@@ -1,5 +1,12 @@
 #!/bin/sh
 
+#################################################################################
+#	Filename:		~/Documents/GitHub/dot_files/git.sh							#
+#	Purpose:		file that manage github										#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
+
 function update_repository {
 	if [ $# -eq 0 ]																	# check if the program must update all the branches
 	then
@@ -29,6 +36,7 @@ function update_repository {
 	git checkout master &> /dev/null
 }
 
+# update --all-repo --branch ""
 function update {
 	branch=''																		# set the default value for the branch
 
@@ -149,6 +157,7 @@ function commit_repository {
 	git checkout master &> /dev/null
 }
 
+# commit --all-repo --branch "" --message ""
 function commit {
 	branch=''																		# set the default value for the branch
 	message='Automatic commit of the repository'									# set the default value for the message
