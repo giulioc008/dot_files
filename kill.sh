@@ -12,23 +12,23 @@ function kill-kill {
 }
 
 function kills {
-	path=$(find $HOME -regex ".*processes_to_kill\.txt")		# retrieve the path of the file that contains the PIDs of the processes that must be killed
+	path=$(find $HOME -type f -regex ".*processes_to_kill\.txt")	# retrieve the path of the file that contains the PIDs of the processes that must be killed
 
-	if [ -e $path ] && [ -f $path ]								# if that checks if the file exists
+	if [ -e $path ] && [ -f $path ]									# if that checks if the file exists
 	then
 		buffer=''
 
-		for i in $(cat $path)									# create a list with the PIDs into the file
+		for i in $(cat $path)										# create a list with the PIDs into the file
 		do
 			buffer="${buffer}${i} "
 		done
 
-		rm -rf $path											# delete permanently the PIDs
+		rm -rf $path												# delete permanently the PIDs
 
 		let i=${#buffer} - 1
-		buffer=${buffer: $i}
+		buffer=${buffer:$i}
 
-		kill -s KILL $buffer > /dev/null						# kill the processes
+		kill -s KILL $buffer > /dev/null							# kill the processes
 	else
 		echo -e "There aren\'t process in background."
 	fi

@@ -3819,18 +3819,31 @@ alias ls='ls -A --color=auto'
 
 ## Code that must be execute when the shell is opened
 export NVM_DIR="$HOME/.nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 					# This loads nvm
-	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"	# This loads nvm bash_completion
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 						# This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"		# This loads nvm bash_completion
 
-# Uncomment the line that load the script that manage yout package manager
-source ~/Documents/GitHub/dot_files/apt.sh								# include the Shell Script that manage apt
-#source ~/Documents/GitHub/dot_files/dnf.sh								# include the Shell Script that manage dnf
-#source ~/Documents/GitHub/dot_files/pacman.sh							# include the Shell Script that manage pacman
+if [ $USER = 'root' ]														# if that manage the include of the Shell Script
+then
+	path=$(find / -type d -regex ".*Documents/GitHub/dot_files")			# retrieve the path of the directory that contains the configuration files
 
-source ~/Documents/GitHub/dot_files/git.sh								# include the Shell Script that manage git
-source ~/Documents/GitHub/dot_files_KDE/kill.sh							# include the Shell Script that manage the background processes
+	# Uncomment the line that load the script that manage yout package manager
+	source "${path}/apt.sh"													# include the Shell Script that manage apt
+	#source "${path}/dnf.sh"												# include the Shell Script that manage dnf
+	#source "${path}/pacman.sh"												# include the Shell Script that manage pacman
 
-rm -rf ~/.zsh_history													# erasing the history of the shell
-clear																	# clearing the shell
+	source "${path}/git.sh"													# include the Shell Script that manage git
+	source "${path}/kill.sh"												# include the Shell Script that manage the background processes
+else
+	# Uncomment the line that load the script that manage yout package manager
+	source ~/Documents/GitHub/dot_files/apt.sh								# include the Shell Script that manage apt
+	#source ~/Documents/GitHub/dot_files/dnf.sh								# include the Shell Script that manage dnf
+	#source ~/Documents/GitHub/dot_files/pacman.sh							# include the Shell Script that manage pacman
+
+	source ~/Documents/GitHub/dot_files/git.sh								# include the Shell Script that manage git
+	source ~/Documents/GitHub/dot_files/kill.sh								# include the Shell Script that manage the background processes
+fi
+
+rm -rf ~/.zsh_history														# erasing the history of the shell
+clear																		# clearing the shell
 
 # End:

@@ -64,7 +64,7 @@ do
 	then
 		word=`expr "${word}" : '\(.*[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\)'`
 		i=$(expr $word : '.*>')
-		word=${word: $i}
+		word=${word:$i}
 		break
 	fi
 done
