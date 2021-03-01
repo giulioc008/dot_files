@@ -17,10 +17,10 @@ This project aims to be a multi-OS collection of templates of configuration file
 The [check_IP](https://github.com/giulioc008/dot_files/tree/master/check_IP) project have the aims to retrieve every change of the IP of the default gateway of a Local Area Network (LAN); it is structured as
 ```
 	/
-		check_IP.service
-		check_IP.sh
-		check_IP.timer
-		install.sh
+	 check_IP.service
+	 check_IP.sh
+	 check_IP.timer
+	 install.sh
 ```
 ## check_IP.service
 This is the `systemd`'s Service Unit that run the Shell Script at boot time.
@@ -41,14 +41,14 @@ The [desktop entries](https://github.com/giulioc008/dot_files/tree/master/deskto
 The `makefile` into the repository is a template for a generic project in C with the following structure
 ```
 	/
-		header/
-			lib.h
-		obj/
-			lib.o
-			main.o
-		source/
-			lib.c
-			main.c
+	 header/
+	        lib.h
+	 obj/
+	     lib.o
+	     main.o
+	 source/
+	        lib.c
+	        main.c
 ```
 
 # System Unit
