@@ -7,6 +7,7 @@
 #	License:		This file is licensed under the LGPLv3.						#
 #################################################################################
 
+# Update a single local repository
 function update_repository {
 	if [ $# -eq 0 ]																	# check if the program must update all the branches
 	then
@@ -22,6 +23,8 @@ function update_repository {
 		unset i
 	elif [ $# -eq 1 ]																# check if the program must update only one branch
 	then
+																					# the parameter $1 is the name of the branch
+
 		git checkout $1 &> /dev/null
 
 		if [ $? -eq 0 ]																# check if the branch exists
@@ -36,7 +39,9 @@ function update_repository {
 	git checkout master &> /dev/null
 }
 
+# Update the local repositories
 # update --all-repo --branch ""
+# update --all-repo --branch=""
 function update {
 	branch=''																		# set the default value for the branch
 
@@ -120,6 +125,7 @@ function update {
 	fi
 }
 
+# Commit a single local repository
 function commit_repository {
 	if [ $# -eq 0 ]																	# check if there are some problems
 	then
@@ -127,6 +133,8 @@ function commit_repository {
 		return 3
 	elif [ $# -eq 1 ]																# check if the program must commit all the branches
 	then
+																					# the parameter $1 is the message of the commit
+
 		for i in $(git branch --list | sed -e 's/^\(.*\)\*\s*\(.*\)$/\1\2/')		# cycle through the list of local branches
 		do
 			i=`echo "${i}" | sed -e 's/^\s*//' -e 's/\s*$//'`						# trim the name of the branch
@@ -141,6 +149,9 @@ function commit_repository {
 		unset i
 	elif [ $# -eq 2 ]																# check if the program must commit only one branch
 	then
+																					# the parameter $1 is the name of the branch
+																					# the parameter $2 is the message of the commit
+
 		git checkout $1 &> /dev/null
 
 		if [ $? -eq 0 ]																# check if the branch exists
@@ -157,7 +168,9 @@ function commit_repository {
 	git checkout master &> /dev/null
 }
 
+# Commit the local repositories
 # commit --all-repo --branch "" --message ""
+# commit --all-repo --branch="" --message=""
 function commit {
 	branch=''																		# set the default value for the branch
 	message='Automatic commit of the repository'									# set the default value for the message
@@ -165,25 +178,25 @@ function commit {
 	saved_IFS=$IFS																	# save the IFS
 	IFS=$'\n'																		# set the IFS to the new-line character
 
-	for options in $*																# parse the options with parameters
+	for parameter in $*																# parse the parameter with parameters
 	do
-		if echo $options | grep -q '\-\-branch'										# check if the parameter is the option --branch
+		if echo $parameter | grep -q '\-\-branch'										# check if the parameter is the option --branch
 		then
-			if echo $options | grep -q '='											# check if the parameter contain, also, the value of the option
+			if echo $parameter | grep -q '='											# check if the parameter contain, also, the value of the option
 			then
-				i=$(expr $options : '.*=')
-				branch=${options:$i}
+				i=$(expr $parameter : '.*=')
+				branch=${parameter:$i}
 			else
 				branch_is_next_parameter='true'
 			fi
 
 			continue
-		elif echo $options | grep -q '\-\-message'									# check if the parameter is the option --message
+		elif echo $parameter | grep -q '\-\-message'									# check if the parameter is the option --message
 		then
-			if echo $options | grep -q '='											# check if the parameter contain, also, the value of the option
+			if echo $parameter | grep -q '='											# check if the parameter contain, also, the value of the option
 			then
-				i=$(expr $options : '.*=')
-				message=${options:$i}
+				i=$(expr $parameter : '.*=')
+				message=${parameter:$i}
 			else
 				message_is_next_parameter='true'
 			fi
@@ -191,13 +204,13 @@ function commit {
 			continue
 		elif [ ! -z $branch_is_next_parameter ]										# check if the parameter is the value of the option --branch
 		then
-			branch=$options
+			branch=$parameter
 
 			unset branch_is_next_parameter
 			continue
 		elif [ ! -z $message_is_next_parameter ]									# check if the parameter is the value of the option --message
 		then
-			message=$options
+			message=$parameter
 
 			unset message_is_next_parameter
 			continue
