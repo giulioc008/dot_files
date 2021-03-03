@@ -2,10 +2,12 @@
 
 #####################################################################################################################
 #	Filename:		~/Documents/GitHub/dot_files/install.sh															#
-#	Purpose:		file that append the include of the opportune Shell Script into the Shell's configuration file	#
-#					and create the links for the opportune scripts into the opportune paths							#
-#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>										#
+#	Purpose:		file that retrieve the info about the machine (DE, distro, kernel, model, OS, package manager	#
+#					and shell), append the include of the opportune Shell Script into the Shell's configuration		#
+#					file and create the links for the opportune scripts into the opportune paths					#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com> 										#
 #	License:		This file is licensed under the LGPLv3.															#
+#	Comments:		Based on neofetch source code (https://github.com/dylanaraps/neofetch)							#
 #####################################################################################################################
 
 ## Colors
@@ -13,21 +15,22 @@ red_bold='\[\e[1;31m\]'
 red_background='\[\e[41m\]'
 white='\[\e[0;37m\]'
 
-reset='\[\e[0m\]'																# reset the color to the default value
+reset='\[\e[0m\]'																	# reset the color to the default value
 
 # Cache the output of uname so we don't have to spawn it multiple times.
 function cache_uname {
 	IFS=' ' read -ra uname <<< "$(uname -srm)"
+																					# save the output of the command uname
 
-	kernel_name="${uname[0]}"
+	kernel_name="${uname[0]}"														# retrieve the kernel's info
 	kernel_version="${uname[1]}"
 	kernel_machine="${uname[2]}"
 
-	if [ "$kernel_name" == 'Darwin' ]
+	if [ "$kernel_name" == 'Darwin' ]												# check if the kernel is of a macOS's distro
 	then
-		IFS=$'\n' read -d '' -ra sw_vers <<< "$(awk -F'<|>' '/key|string/ {print $3}' '/System/Library/CoreServices/SystemVersion.plist')"
+		IFS=$'\n' read -d '' -ra sw_vers <<< "$(awk -F'<|> ' '/key|string/ {print $3}' '/System/Library/CoreServices/SystemVersion.plist')"
 
-		for ((i = 0; i < ${#sw_vers[@]}; i += 2)) {
+		for ((i = 0; i < ${#sw_vers[@]}; i += 2)) {									# cycle on the vector sw_vers to retrieve the kernel's info
 			case ${sw_vers[i]} in
 				ProductName)
 					darwin_name=${sw_vers[i+1]}
@@ -44,10 +47,14 @@ function cache_uname {
 		   esac
 		}
 	fi
+
+	unset uname
+	unset sw_vers
 }
 
+# Retrieve the DE of the OS
 function get_de {
-	[ $de ] && return
+	[ $de ] && return																# check if the distro is already set
 
 	case $os in
 		Mac OS X | macOS)
@@ -102,6 +109,7 @@ function get_de {
 					;;
 			esac
 
+			unset freemint_wm
 			break
 			;;
 		*)
@@ -167,73 +175,12 @@ function get_de {
 			;;
 	esac
 
-	((${KDE_SESSION_VERSION:-0} >= 4)) && de=${de/KDE/Plasma}
-
-	if [ $de_version == on ] && [ $de ]
-	then
-		case $de in
-			Plasma*)
-				de_ver=$(plasmashell --version)
-				break
-				;;
-			MATE*)
-				de_ver=$(mate-session --version)
-				break
-				;;
-			Xfce*)
-				de_ver=$(xfce4-session --version)
-				break
-				;;
-			GNOME*)
-				de_ver=$(gnome-shell --version)
-				break
-				;;
-			Cinnamon*)
-				de_ver=$(cinnamon --version)
-				break
-				;;
-			Deepin*)
-				de_ver=$(awk -F'=' '/Version/ {print $2}' /etc/deepin-version)
-				break
-				;;
-			Budgie*)
-				de_ver=$(budgie-desktop --version)
-				break
-				;;
-			LXQt*)
-				de_ver=$(lxqt-session --version)
-				break
-				;;
-			Lumina*)
-				de_ver=$(lumina-desktop --version 2>&1)
-				break
-				;;
-			Trinity*)
-				de_ver=$(tde-config --version)
-				break
-				;;
-			Unity*)
-				de_ver=$(unity --version)
-				break
-				;;
-		esac
-
-		de_ver=${de_ver/*TDE:}
-		de_ver=${de_ver/tde-config*}
-		de_ver=${de_ver/liblxqt*}
-		de_ver=${de_ver/Copyright*}
-		de_ver=${de_ver/)*}
-		de_ver=${de_ver/* }
-		de_ver=${de_ver//\"}
-
-		de+=" $de_ver"
-	fi
-
-	[ $de ] && [ $WAYLAND_DISPLAY ] && de+=' (Wayland)'
+	((${KDE_SESSION_VERSION:-0} > = 4)) && de=${de/KDE/Plasma}
 }
 
+# Retrieve the distro of the OS
 function get_distro {
-	[ $distro ] && return
+	[ $distro ] && return															# check if the distro is already set
 
 	case $os in
 		Linux | BSD | MINIX)
@@ -253,12 +200,12 @@ function get_distro {
 			elif [ -f /etc/mcst_version ]
 			then
 				distro="OS Elbrus $(< /etc/mcst_version)"
-			elif type -p pveversion >/dev/null
+			elif type -p pveversion > /dev/null
 			then
 				distro=$(pveversion)
 				distro=${distro#pve-manager/}
 				distro="Proxmox VE ${distro%/*}"
-			elif type -p lsb_release >/dev/null
+			elif type -p lsb_release > /dev/null
 			then
 				distro=$(lsb_release -sd)
 			elif [ -f /etc/os-release ] || [ -f /usr/lib/os-release ] || [ -f /etc/openwrt_release ] || [ -f /etc/lsb-release ]
@@ -277,13 +224,13 @@ function get_distro {
 			elif [ -f /etc/SDE-VERSION ]
 			then
 				distro="$(< /etc/SDE-VERSION)"
-			elif type -p crux >/dev/null
+			elif type -p crux > /dev/null
 			then
 				distro=$(crux)
-			elif type -p tazpkg >/dev/null
+			elif type -p tazpkg > /dev/null
 			then
 				distro="SliTaz $(< /etc/slitaz-release)"
-			elif type -p kpt >/dev/null && type -p kpm >/dev/null
+			elif type -p kpt > /dev/null && type -p kpm > /dev/null
 			then
 				distro=KSLinux
 			elif [ -d /system/app/ ] && [ -d /system/priv-app ]
@@ -294,14 +241,16 @@ function get_distro {
 			elif [ -f /etc/lsb-release ] && [ $(< /etc/lsb-release) == *CHROMEOS* ]
 			then
 				distro='Chrome OS'
-			elif type -p guix >/dev/null
+			elif type -p guix > /dev/null
 			then
 				distro="Guix System $(guix -V | awk 'NR==1{printf $4}')"
 			# Display whether using '-current' or '-release' on OpenBSD
-			elif [ $kernel_name = OpenBSD ]
+			elif [ $kernel_name = 'OpenBSD' ]
 			then
 				read -ra kernel_info <<< "$(sysctl -n kern.version)"
 				distro=${kernel_info[*]:0:2}
+
+				unset kernel_info
 			else
 				for release_file in /etc/*-release
 				do
@@ -366,6 +315,7 @@ function get_distro {
 						;;
 				esac
 			fi
+
 			break
 			;;
 		Mac OS X | macOS)
@@ -433,18 +383,22 @@ function get_distro {
 			esac
 
 			distro="$codename $osx_version $osx_build"
+
+			unset codename
+			unset osx_version
+			unset osx_build
 			break
 			;;
 		iPhone OS)
 			distro="iOS $osx_version"
 
+			unset osx_version
 			break
 			;;
 		Windows)
 			distro=$(wmic os get Caption)
 			distro=${distro/Caption}
 			distro=${distro/Microsoft }
-
 			break
 			;;
 		Solaris)
@@ -472,23 +426,9 @@ function get_distro {
 
 	distro=${distro//Enterprise Server}
 	[ $distro ] || distro="$os (Unknown)"
-
-	# Get OS architecture.
-	case $os in
-		Solaris | AIX | Haiku | IRIX | FreeMiNT)
-			machine_arch=$(uname -p)
-			break
-			;;
-		*)
-			machine_arch=$kernel_machine
-			break
-			;;
-	esac
-
-	[ $os_arch == on ] && distro+=" $machine_arch"
-	[ ${ascii_distro:-auto} == auto ] && ascii_distro=$(trim "$distro")
 }
 
+# Retrieve the kernel of the OS
 function get_kernel {
 	# Since these OS are integrated systems, it's better to skip this function altogether
 	[[ $os =~ ('AIX' | 'IRIX') ]] && return
@@ -510,8 +450,11 @@ function get_kernel {
 
 	# Hide kernel info if it's identical to the distro info.
 	[[ $os =~ ('BSD' | 'MINIX') ]] && [ $distro == *"$kernel_name"* ] && unset kernel
+
+	unset kernel_version
 }
 
+# Retrieve the model of the machine
 function get_model {
 	case $os in
 		Linux)
@@ -813,9 +756,14 @@ function get_model {
 			break
 			;;
 	esac
+
+	unset kernel_machine
 }
 
+# Retrieve the OS of the machine
 function get_os {
+	[ $os ] && return																# check if the distro is already set
+
 	case $kernel_name in
 		Darwin)
 			os=$darwin_name
@@ -865,250 +813,146 @@ function get_os {
 			exit 1
 			;;
 	esac
+
+	unset darwin_name
 }
 
-function get_packages {
-	# to adjust the number of pkgs per pkg manager
-	pkgs_h=0
+# Retrieve the list of the package managers
+function get_package_manager {
+	[ $managers ] && {
+		managers=''
+	}																# check if the package manager is already set
 
-	# has: Check if package manager installed.
-	# dir: Count files or dirs in a glob.
-	# pac: If packages > 0, log package manager name.
-	# tot: Count lines in command output.
+	# Check if package manager installed.
 	function has {
-		type -p "$1" >/dev/null && manager=$1
-	}
-	function dir {
-		((packages+=$#))
-		pac "$(($#-pkgs_h))"
-	}
-	function pac {
-		(($1 > 0)) && {
-			managers+=("$1 (${manager})")
-			manager_string+="${manager}, "
-		}
-	}
-	function tot {
-		IFS=$'\n' read -d '' -ra pkgs <<< "$("$@")"
-		((packages+=${#pkgs[@]}))
-		pac "$((${#pkgs[@]}-pkgs_h))"
-	}
-
-	# Redefine tot() for Bedrock Linux.
-	[ -f /bedrock/etc/bedrock-release ] && [ $PATH == */bedrock/cross/* ] && {
-		function tot {
-			IFS=$'\n' read -d '' -ra pkgs <<< "$(for s in $(brl list)
-			do
-				strat -r "$s" "$@"
-			done)"
-			((packages+="${#pkgs[@]}"))
-			pac "$((${#pkgs[@]}-pkgs_h))"
-		}
-
-		br_prefix='/bedrock/strata/*'
+		type -p "$1" > /dev/null && managers="${managers}$1 "
 	}
 
 	case $os in
 		Linux | BSD | iPhone OS | Solaris)
 			# Package Manager Programs.
-			has kiss && tot kiss l
-			has cpt-list && tot cpt-list
-			has pacman-key && tot pacman -Qq --color never
-			has apt && tot apt list
-			has rpm && tot rpm -qa
-			has xbps-query && tot xbps-query -l
-			has apk && tot apk info
-			has opkg && tot opkg list-installed
-			has pacman-g2 && tot pacman-g2 -Q
-			has lvu && tot lvu installed
-			has tce-status && tot tce-status -i
-			has pkg_info && tot pkg_info
-			has tazpkg && pkgs_h=6 tot tazpkg list && ((packages-=6))
-			has sorcery	&& tot gaze installed
-			has alps && tot alps showinstalled
-			has butch && tot butch list
-			has swupd && tot swupd bundle-list --quiet
+			has alps
+			has apk
+			has apt
+			has brew
+			has butch
+			has cave
+			has Compile
+			has cpt-list
+			has crew
+			has emerge
+			has eopkg
+			has flatpak
+			has kagami
+			has kiss
+			has kpm-pkg
+			has lvu
+			has opkg
+			has pacman-g2
+			has pacman-key
+			has pkg
+			has pkg_info
+			has pkgtool
+			has puyo
+			has rpm
+			has scratch
+			has snap
+			has sorcery
+			has spm
+			has swupd
+			has tazpkg
+			has tce-status
+			has xbps-query
 
 			# 'mine' conflicts with minesweeper games.
-			[ -f /etc/SDE-VERSION ] && has mine && tot mine -q
-
-			# Counting files/dirs.
-			# Variables need to be unquoted here. Only Bedrock Linux is affected.
-			# $br_prefix is fixed and won't change based on user input so this is safe either way.
-			# shellcheck disable=SC2086
-			{
-				shopt -s nullglob
-				has brew && dir "$(brew --cellar)"/*
-				has emerge && dir ${br_prefix}/var/db/pkg/*/*/
-				has Compile && dir ${br_prefix}/Programs/*/
-				has eopkg && dir ${br_prefix}/var/lib/eopkg/package/*
-				has crew && dir ${br_prefix}/usr/local/etc/crew/meta/*.filelist
-				has pkgtool && dir ${br_prefix}/var/log/packages/*
-				has scratch && dir ${br_prefix}/var/lib/scratchpkg/index/*/.pkginfo
-				has kagami && dir ${br_prefix}/var/lib/kagami/pkgs/*
-				has cave && dir ${br_prefix}/var/db/paludis/repositories/cross-installed/*/data/*/ ${br_prefix}/var/db/paludis/repositories/installed/data/*/
-				shopt -u nullglob
-			}
-
-			# Other (Needs complex command)
-			has kpm-pkg && ((packages+=$(kpm  --get-selections | grep -cv deinstall$)))
+			[ -f /etc/SDE-VERSION ] && has mine
 
 			has guix && {
-				manager=guix-system && tot guix package -p '/run/current-system/profile' -I
-				manager=guix-user   && tot guix package -I
+				managers="${managers}guix-system guix-user "
 			}
 
 			has nix-store && {
-				function nix-user-pkgs {
-					nix-store -qR ~/.nix-profile
-					nix-store -qR /etc/profiles/per-user/"$USER"
-				}
-
-				manager=nix-system && tot nix-store -qR /run/current-system/sw
-				manager=nix-user && tot nix-user-pkgs
-				manager=nix-default && tot nix-store -qR /nix/var/nix/profiles/default
+				managers="${managers}nix-system nix-user nix-default "
 			}
 
 			# pkginfo is also the name of a python package manager which is painfully slow.
 			# TODO: Fix this somehow.
-			has pkginfo && tot pkginfo -i
+			has pkginfo
 
-			case $kernel_name in
-				FreeBSD | DragonFly)
-					has pkg && tot pkg info
-					break
-					;;
-				*)
-					has pkg && dir /var/db/pkg/*
-					((packages == 0)) && has pkg && tot pkg list
-					break
-					;;
-			esac
-
-			# List these last as they accompany regular package managers.
-			has flatpak && tot flatpak list
-			has spm && tot spm list -i
-			has puyo && dir ~/.puyo/installed
-
-			# Snap hangs if the command is run without the daemon running.
-			# Only run snap if the daemon is also running.
-			has snap && ps -e | grep -qFm 1 snapd >/dev/null && pkgs_h=1 tot snap list && ((packages-=1))
-
-			# This is the only standard location for appimages.
-			# See: https://github.com/AppImage/AppImageKit/wiki
-			manager=appimage && has appimaged && dir ~/.local/bin/*.appimage
+			managers="${managers}appimage " && has appimaged
 
 			break
 			;;
 		Mac OS X | macOS | MINIX)
-			has port && pkgs_h=1 tot port installed && ((packages-=1))
-			has brew && dir /usr/local/Cellar/*
-			has pkgin && tot pkgin list
+			has brew
+			has pkgin
+			has port
 
 			has nix-store && {
-				function nix-user-pkgs {
-					nix-store -qR ~/.nix-profile
-					nix-store -qR /etc/profiles/per-user/"$USER"
-				}
-
-				manager=nix-system && tot nix-store -qR /run/current-system/sw
-				manager=nix-user && tot nix-store -qR nix-user-pkgs
+				managers="${managers}nix-system nix-user "
 			}
 			break
 			;;
 		AIX | FreeMiNT)
-			has lslpp && ((packages+=$(lslpp -J -l -q | grep -cv '^#')))
-			has rpm && tot rpm -qa
+			has lslpp
+			has rpm
 			break
 			;;
 		Windows)
 			case $kernel_name in
 				CYGWIN*)
-					has cygcheck && tot cygcheck -cd
+					has cygcheck
 					break
 					;;
 				MSYS*)
-					has pacman   && tot pacman -Qq --color never
+					has pacman
 					break
 					;;
 			esac
 
-			# Scoop environment throws errors if `tot scoop list` is used
-			has scoop && pkgs_h=1 dir ~/scoop/apps/* && ((packages-=1))
-
-			# Count chocolatey packages.
-			[ -d /cygdrive/c/ProgramData/chocolatey/lib ] && dir /cygdrive/c/ProgramData/chocolatey/lib/*
+			has scoop
 
 			break
 			;;
 		Haiku)
-			has pkgman && dir /boot/system/package-links/*
-			packages=${packages/pkgman/depot}
+			has pkgman
 			break
 			;;
 		IRIX)
-			manager=swpkg
-			pkgs_h=3 tot versions -b && ((packages-=3))
+			managers=swpkg
 			break
 			;;
 	esac
 
-	if ((packages == 0))
-	then
-		unset packages
-	elif [ $package_managers == on ]
-	then
-		printf -v packages '%s, ' "${managers[@]}"
-		packages=${packages%,*}
-	elif [ $package_managers == tiny ]
-	then
-		packages+=" (${manager_string%,*})"
-	fi
-
-	packages=${packages/pacman-key/pacman}
+	unset kernel_name
 }
 
 # Retrieve the name of the Shell
 function get_shell {
-	return "${SHELL##*/} "
+	shell="${SHELL##*/}"															# truncate the path of the shell from the last '/'
 }
 
-# If the user is using KDE, retrieve the KDE configuration directory
-function kde_config_dir {
-	if [ "$kde_config_dir" ]
-	then
-		return
-	elif type -p kf5-config &>/dev/null
-	then
-		kde_config_dir="$(kf5-config --path config)"
-
-	elif type -p kde4-config &>/dev/null
-	then
-		kde_config_dir="$(kde4-config --path config)"
-
-	elif type -p kde-config &>/dev/null
-	then
-		kde_config_dir="$(kde-config --path config)"
-
-	elif [ -d "${HOME}/.kde4" ]
-	then
-		kde_config_dir="${HOME}/.kde4/share/config"
-
-	elif [ -d "${HOME}/.kde3" ]
-	then
-		kde_config_dir="${HOME}/.kde3/share/config"
-	fi
-
-	kde_config_dir="${kde_config_dir/$'/:'*}"
+# Trim a string and print it
+function trim_quotes {
+	trim_output="${1//\'}"
+	trim_output="${trim_output//\"}"
+	echo $trim_output
 }
 
 cache_uname
 
+get_shell																			# retrieve the type of the shell ($shell)
+get_os																				# retrieve the OS ($os)
+get_distro																			# retrieve the distro of the OS ($distro)
+get_kernel																			# retrieve the kernel of the OS ($kernel)
+get_de																				# retrieve the DE of the OS ($de)
+get_model																			# retrieve the model of the machine ($model)
+get_package_manager																	# retrieve the list of the package managers ($managers)
+
 path=$(find $HOME -type d -regex '.*dot_files' 2> /dev/null)						# retrieve the path of the repository
 
-get_shell
-ln -f -s "${path}/.$?rc" "${HOME}/.$?rc"											# link the Shell's configuration file
-sudo ln -f -s "${path}/.$?rc" "/root/.$?rc"
+ln -f -s "${path}/.${shell}rc" "${HOME}/.${shell}rc"								# link the Shell's configuration file
+sudo ln -f -s "${path}/.${shell}rc" "/root/.${shell}rc"
 
 ln -f -s "${path}/.vimrc" "${HOME}/.vimrc"											# link the Vim's configuration files
 sudo ln -f -s "${path}/.vimrc" "/root/.vimrc"
@@ -1130,6 +974,6 @@ do
 	sudo cp "${path}/desktop_entries/${i}" "/root/Desktop/${i}"
 done
 
-`${path}/check_IP/install.sh`														# install the check_IP project
+`"${path}/check_IP/install.sh"`														# install the check_IP project
 
 exit 0

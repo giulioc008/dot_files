@@ -1,106 +1,10 @@
-# Filename:      /etc/zsh/zshrc
-# Purpose:       config file for zsh (z shell)
-# Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
-# Bug-Reports:   see http://grml.org/bugs/
-# License:       This file is licensed under the GPL v2.
-################################################################################
-# This file is sourced only for interactive shells. It
-# should contain commands to set up aliases, functions,
-# options, key bindings, etc.
-#
-# Global Order: zshenv, zprofile, zshrc, zlogin
-################################################################################
-
-# USAGE
-# If you are using this file as your ~/.zshrc file, please use ~/.zshrc.pre
-# and ~/.zshrc.local for your own customisations. The former file is read
-# before ~/.zshrc, the latter is read after it. Also, consider reading the
-# refcard and the reference manual for this setup, both available from:
-#     <http://grml.org/zsh/>
-
-# Contributing:
-# If you want to help to improve grml's zsh setup, clone the grml-etc-core
-# repository from git.grml.org:
-#   git clone git://git.grml.org/grml-etc-core.git
-#
-# Make your changes, commit them; use 'git format-patch' to create a series
-# of patches and send those to the following address via 'git send-email':
-#   grml-etc-core@grml.org
-#
-# Doing so makes sure the right people get your patches for review and
-# possibly inclusion.
-
-# zsh-refcard-tag documentation:
-#   You may notice strange looking comments in this file.
-#   These are there for a purpose. grml's zsh-refcard can now be
-#   automatically generated from the contents of the actual configuration
-#   file. However, we need a little extra information on which comments
-#   and what lines of code to take into account (and for what purpose).
-#
-# Here is what they mean:
-#
-# List of tags (comment types) used:
-#   #a#     Next line contains an important alias, that should
-#           be included in the grml-zsh-refcard.
-#           (placement tag: @@INSERT-aliases@@)
-#   #f#     Next line contains the beginning of an important function.
-#           (placement tag: @@INSERT-functions@@)
-#   #v#     Next line contains an important variable.
-#           (placement tag: @@INSERT-variables@@)
-#   #k#     Next line contains an important keybinding.
-#           (placement tag: @@INSERT-keybindings@@)
-#   #d#     Hashed directories list generation:
-#               start   denotes the start of a list of 'hash -d'
-#                       definitions.
-#               end     denotes its end.
-#           (placement tag: @@INSERT-hasheddirs@@)
-#   #A#     Abbreviation expansion list generation:
-#               start   denotes the beginning of abbreviations.
-#               end     denotes their end.
-#           Lines within this section that end in '#d .*' provide
-#           extra documentation to be included in the refcard.
-#           (placement tag: @@INSERT-abbrev@@)
-#   #m#     This tag allows you to manually generate refcard entries
-#           for code lines that are hard/impossible to parse.
-#               Example:
-#                   #m# k ESC-h Call the run-help function
-#               That would add a refcard entry in the keybindings table
-#               for 'ESC-h' with the given comment.
-#           So the syntax is: #m# <section> <argument> <comment>
-#   #o#     This tag lets you insert entries to the 'other' hash.
-#           Generally, this should not be used. It is there for
-#           things that cannot be done easily in another way.
-#           (placement tag: @@INSERT-other-foobar@@)
-#
-#   All of these tags (except for m and o) take two arguments, the first
-#   within the tag, the other after the tag:
-#
-#   #<tag><section># <comment>
-#
-#   Where <section> is really just a number, which are defined by the
-#   @secmap array on top of 'genrefcard.pl'. The reason for numbers
-#   instead of names is, that for the reader, the tag should not differ
-#   much from a regular comment. For zsh, it is a regular comment indeed.
-#   The numbers have got the following meanings:
-#         0 -> "default"
-#         1 -> "system"
-#         2 -> "user"
-#         3 -> "debian"
-#         4 -> "search"
-#         5 -> "shortcuts"
-#         6 -> "services"
-#
-#   So, the following will add an entry to the 'functions' table in the
-#   'system' section, with a (hopefully) descriptive comment:
-#       #f1# Edit an alias via zle
-#       edalias() {
-#
-#   It will then show up in the @@INSERT-aliases-system@@ replacement tag
-#   that can be found in 'grml-zsh-refcard.tex.in'.
-#   If the section number is omitted, the 'default' section is assumed.
-#   Furthermore, in 'grml-zsh-refcard.tex.in' @@INSERT-aliases@@ is
-#   exactly the same as @@INSERT-aliases-default@@. If you want a list of
-#   *all* aliases, for example, use @@INSERT-aliases-all@@.
+#########################################################################################################
+#	Filename:		~/.zshrc																			#
+#	Purpose:		config file for zsh (z shell)														#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>							#
+#	License:		This file is licensed under the LGPLv3.												#
+#	Comments:		Based on the zsh configuration file of grml (https://github.com/grml/grml-etc-core)	#
+#########################################################################################################
 
 # zsh profiling
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
@@ -113,97 +17,99 @@ fi
 
 # check for version/system
 # check for versions (compatibility reasons)
-function is4 () {
+function is4 {
     [[ $ZSH_VERSION == <4->* ]] && return 0
     return 1
 }
 
-function is41 () {
+function is41 {
     [[ $ZSH_VERSION == 4.<1->* || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
-function is42 () {
+function is42 {
     [[ $ZSH_VERSION == 4.<2->* || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
-function is425 () {
+function is425 {
     [[ $ZSH_VERSION == 4.2.<5->* || $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
-function is43 () {
+function is43 {
     [[ $ZSH_VERSION == 4.<3->* || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
-function is433 () {
+function is433 {
     [[ $ZSH_VERSION == 4.3.<3->* || $ZSH_VERSION == 4.<4->* \
                                  || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
-function is437 () {
+function is437 {
     [[ $ZSH_VERSION == 4.3.<7->* || $ZSH_VERSION == 4.<4->* \
                                  || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
-function is439 () {
+function is439 {
     [[ $ZSH_VERSION == 4.3.<9->* || $ZSH_VERSION == 4.<4->* \
                                  || $ZSH_VERSION == <5->* ]] && return 0
     return 1
 }
 
 #f1# Checks whether or not you're running grml
-function isgrml () {
+function isgrml {
     [[ -f /etc/grml_version ]] && return 0
     return 1
 }
 
 #f1# Checks whether or not you're running a grml cd
-function isgrmlcd () {
+function isgrmlcd {
     [[ -f /etc/grml_cd ]] && return 0
     return 1
 }
 
 if isgrml ; then
 #f1# Checks whether or not you're running grml-small
-    function isgrmlsmall () {
+    function isgrmlsmall {
         if [[ ${${${(f)"$(</etc/grml_version)"}%% *}##*-} == 'small' ]]; then
             return 0
         fi
         return 1
     }
 else
-    function isgrmlsmall () { return 1 }
+    function isgrmlsmall {
+		return 1
+    }
 fi
 
 GRML_OSTYPE=$(uname -s)
 
-function islinux () {
+function islinux {
     [[ $GRML_OSTYPE == "Linux" ]]
 }
 
-function isdarwin () {
+function isdarwin {
     [[ $GRML_OSTYPE == "Darwin" ]]
 }
 
-function isfreebsd () {
+function isfreebsd {
     [[ $GRML_OSTYPE == "FreeBSD" ]]
 }
 
-function isopenbsd () {
+function isopenbsd {
     [[ $GRML_OSTYPE == "OpenBSD" ]]
 }
 
-function issolaris () {
+function issolaris {
     [[ $GRML_OSTYPE == "SunOS" ]]
 }
 
 #f1# are we running within an utf environment?
-function isutfenv () {
+function isutfenv {
     case "$LANG $CHARSET $LANGUAGE" in
         *utf*) return 0 ;;
         *UTF*) return 0 ;;
@@ -217,7 +123,7 @@ function isutfenv () {
 # change directory to home on first invocation of zsh
 # important for rungetty -> autologin
 # Thanks go to Bart Schaefer!
-isgrml && function checkhome () {
+isgrml && function checkhome {
     if [[ -z "$ALREADY_DID_CD_HOME" ]] ; then
         export ALREADY_DID_CD_HOME=$HOME
         cd
@@ -247,13 +153,13 @@ if ! [[ ${ZSH_VERSION} == 3.1.<7->*      \
     printf '-!- Ye been warned!\n'
     printf '-!-\n'
 
-    function zstyle () { : }
+    function zstyle { : }
 fi
 
 # autoload wrapper - use this one instead of autoload directly
 # We need to define this function as early as this, because autoloading
 # 'is-at-least()' needs it.
-function zrcautoload () {
+function zrcautoload {
     emulate -L zsh
     setopt extended_glob
     local fdir ffile
@@ -281,7 +187,7 @@ function zrcautoload () {
 # with just a few adjustments in coding style to make the function look more
 # compact. This definition can be removed as soon as we raise the minimum
 # version requirement to 4.3.7 or newer.
-function add-zsh-hook () {
+function add-zsh-hook {
     # Add to HOOK the given FUNCTION.
     # HOOK is one of chpwd, precmd, preexec, periodic, zshaddhistory,
     # zshexit, zsh_directory_name (the _functions subscript is not required).
@@ -354,7 +260,7 @@ function add-zsh-hook () {
 # Load is-at-least() for more precise version checks Note that this test will
 # *always* fail, if the is-at-least function could not be marked for
 # autoloading.
-zrcautoload is-at-least || function is-at-least () { return 1 }
+zrcautoload is-at-least || function is-at-least { return 1 }
 
 # set some important options (as early as possible)
 
@@ -458,7 +364,7 @@ fi
 # Usage: check_com [-c|-g] word
 #   -c  only checks for external commands
 #   -g  does the usual tests and also checks for global aliases
-function check_com () {
+function check_com {
     emulate -L zsh
     local -i comonly gatoo
     comonly=0
@@ -498,7 +404,7 @@ function check_com () {
 
 # creates an alias and precedes the command with
 # if $EUID is not zero.
-function salias () {
+function salias {
     emulate -L zsh
     local only=0 ; local multi=0
     local key val
@@ -536,7 +442,7 @@ function salias () {
 }
 
 # Check if we can read given files and source those we can.
-function xsource () {
+function xsource {
     if (( ${#argv} < 1 )) ; then
         printf 'usage: xsource FILE(s)...\n' >&2
         return 1
@@ -550,7 +456,7 @@ function xsource () {
 }
 
 # Check if we can read a given file and 'cat(1)' it.
-function xcat () {
+function xcat {
     emulate -L zsh
     if (( ${#argv} != 1 )) ; then
         printf 'usage: xcat FILE\n' >&2
@@ -563,7 +469,7 @@ function xcat () {
 
 # Remove these functions again, they are of use only in these
 # setup files. This should be called at the end of .zshrc.
-function xunfunction () {
+function xunfunction {
     emulate -L zsh
     local -a funcs
     local func
@@ -577,7 +483,7 @@ function xunfunction () {
 
 # this allows us to stay in sync with grml's zshrc and put own
 # modifications in ~/.zshrc.local
-function zrclocal () {
+function zrclocal {
     xsource "/etc/zsh/zshrc.local"
     xsource "${ZDOTDIR:-${HOME}}/.zshrc.local"
     return 0
@@ -684,7 +590,7 @@ fi
 # called later (via is4 && grmlcomp)
 # note: use 'zstyle' for getting current settings
 #         press ^xh (control-x h) for getting tags in context; ^x? (control-x ?) to run complete_debug with trace output
-function grmlcomp () {
+function grmlcomp {
     # TODO: This could use some additional information
 
     # Make sure the completion system is initialised
@@ -787,7 +693,7 @@ function grmlcomp () {
     zstyle ':completion:*' special-dirs ..
 
     # run rehash on completion so new installed program are found automatically:
-    function _force_rehash () {
+    function _force_rehash {
         (( CURRENT == 1 )) && rehash
         return 1
     }
@@ -878,7 +784,7 @@ bindkey -e
 
 ## beginning-of-line OR beginning-of-buffer OR beginning of history
 ## by: Bart Schaefer <schaefer@brasslantern.com>, Bernhard Tittelbach
-function beginning-or-end-of-somewhere () {
+function beginning-or-end-of-somewhere {
     local hno=$HISTNO
     if [[ ( "${LBUFFER[-1]}" == $'\n' && "${WIDGET}" == beginning-of* ) || \
       ( "${RBUFFER[1]}" == $'\n' && "${WIDGET}" == end-of* ) ]]; then
@@ -894,14 +800,14 @@ zle -N beginning-of-somewhere beginning-or-end-of-somewhere
 zle -N end-of-somewhere beginning-or-end-of-somewhere
 
 # add a command line to the shells history without executing it
-function commit-to-history () {
+function commit-to-history {
     print -s ${(z)BUFFER}
     zle send-break
 }
 zle -N commit-to-history
 
 # only slash should be considered as a word separator:
-function slash-backward-kill-word () {
+function slash-backward-kill-word {
     local WORDCHARS="${WORDCHARS:s@/@}"
     # zle backward-word
     zle backward-kill-word
@@ -927,7 +833,7 @@ zle -N slash-backward-kill-word
 # find the first word on the command line in the $command[] hash.
 zstyle ':acceptline:*' rehash true
 
-function Accept-Line () {
+function Accept-Line {
     setopt localoptions noksharrays
     local -a subs
     local -xi aldone
@@ -947,7 +853,7 @@ function Accept-Line () {
     done
 }
 
-function Accept-Line-getdefault () {
+function Accept-Line-getdefault {
     emulate -L zsh
     local default_action
 
@@ -962,7 +868,7 @@ function Accept-Line-getdefault () {
     esac
 }
 
-function Accept-Line-HandleContext () {
+function Accept-Line-HandleContext {
     zle Accept-Line
 
     default_action=$(Accept-Line-getdefault)
@@ -970,7 +876,7 @@ function Accept-Line-HandleContext () {
         && zle ${default_action}
 }
 
-function accept-line () {
+function accept-line {
     setopt localoptions noksharrays
     local -a cmdline
     local -x alcontext
@@ -1084,7 +990,7 @@ abk=(
     'co'   './configure && make && make install'
 )
 
-function zleiab () {
+function zleiab {
     emulate -L zsh
     setopt extendedglob
     local MATCH
@@ -1095,21 +1001,21 @@ function zleiab () {
 
 zle -N zleiab
 
-function help-show-abk () {
+function help-show-abk {
   zle -M "$(print "Available abbreviations for expansion:"; print -a -C 2 ${(kv)abk})"
 }
 
 zle -N help-show-abk
 
 # press "ctrl-x d" to insert the actual date in the form yyyy-mm-dd
-function insert-datestamp () { LBUFFER+=${(%):-'%D{%Y-%m-%d}'}; }
+function insert-datestamp { LBUFFER+=${(%):-'%D{%Y-%m-%d}'}; }
 zle -N insert-datestamp
 
 # press esc-m for inserting last typed word again (thanks to caphuso!)
-function insert-last-typed-word () { zle insert-last-word -- 0 -1 };
+function insert-last-typed-word { zle insert-last-word -- 0 -1 };
 zle -N insert-last-typed-word;
 
-function grml-zsh-fg () {
+function grml-zsh-fg {
   if (( ${#jobstates} )); then
     zle .push-input
     [[ -o hist_ignore_space ]] && BUFFER=' ' || BUFFER=''
@@ -1122,7 +1028,7 @@ function grml-zsh-fg () {
 zle -N grml-zsh-fg
 
 # run command line as user root via sudo:
-function sudo-command-line () {
+function sudo-command-line {
     [[ -z $BUFFER ]] && zle up-history
     if [[ $BUFFER != sudo\ * ]]; then
         BUFFER="$BUFFER"
@@ -1133,7 +1039,7 @@ zle -N sudo-command-line
 
 ### jump behind the first word on the cmdline.
 ### useful to add options.
-function jump_after_first_word () {
+function jump_after_first_word {
     local words
     words=(${(z)BUFFER})
 
@@ -1146,7 +1052,7 @@ function jump_after_first_word () {
 zle -N jump_after_first_word
 
 #f5# Create directory under cursor or the selected area
-function inplaceMkDirs () {
+function inplaceMkDirs {
     # Press ctrl-xM to create the directory under the cursor or the selected area.
     # To select an area press ctrl-@ or ctrl-space and use the cursor.
     # Use case: you type "mv abc ~/testa/testb/testc/" and remember that the
@@ -1185,7 +1091,7 @@ HELP_LINES_PER_PAGE=20
 #v1# set location of help-zle cache file
 HELP_ZLE_CACHE_FILE=~/.cache/zsh_help_zle_lines.zsh
 # helper function for help-zle, actually generates the help text
-function help_zle_parse_keybindings () {
+function help_zle_parse_keybindings {
     emulate -L zsh
     setopt extendedglob
     unsetopt ksharrays  #indexing starts at 1
@@ -1286,7 +1192,7 @@ typeset -g help_zle_sln
 typeset -g -a help_zle_lines
 
 # Provides (partially autogenerated) help on keybindings and the zsh line editor
-function help-zle () {
+function help-zle {
     emulate -L zsh
     unsetopt ksharrays  #indexing starts at 1
     #help lines already generated ? no ? then do it
@@ -1302,7 +1208,7 @@ zle -N help-zle
 
 ## complete word from currently visible Screen or Tmux buffer.
 if check_com -c screen || check_com -c tmux; then
-    function _complete_screen_display () {
+    function _complete_screen_display {
         [[ "$TERM" != "screen" ]] && return 1
 
         local TMPFILE=$(mktemp)
@@ -1333,17 +1239,17 @@ fi
 
 # Load a few more functions and tie them to widgets, so they can be bound:
 
-function zrcautozle () {
+function zrcautozle {
     emulate -L zsh
     local fnc=$1
     zrcautoload $fnc && zle -N $fnc
 }
 
-function zrcgotwidget () {
+function zrcgotwidget {
     (( ${+widgets[$1]} ))
 }
 
-function zrcgotkeymap () {
+function zrcgotkeymap {
     [[ -n ${(M)keymaps:#$1} ]]
 }
 
@@ -1362,13 +1268,13 @@ zstyle ':completion:hist-complete:*' completer _history
 # An array to note missing features to ease diagnosis in case of problems.
 typeset -ga grml_missing_features
 
-function zrcbindkey () {
+function zrcbindkey {
     if (( ARGC )) && zrcgotwidget ${argv[-1]}; then
         bindkey "$@"
     fi
 }
 
-function bind2maps () {
+function bind2maps {
     local i sequence widget
     local -a maps
 
@@ -1394,18 +1300,18 @@ function bind2maps () {
 }
 
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-    function zle-smkx () {
+    function zle-smkx {
         emulate -L zsh
         printf '%s' ${terminfo[smkx]}
     }
-    function zle-rmkx () {
+    function zle-rmkx {
         emulate -L zsh
         printf '%s' ${terminfo[rmkx]}
     }
-    function zle-line-init () {
+    function zle-line-init {
         zle-smkx
     }
-    function zle-line-finish () {
+    function zle-line-finish {
         zle-rmkx
     }
     zle -N zle-line-init
@@ -1585,7 +1491,7 @@ done; unset rh
 # command not found handling
 
 (( ${COMMAND_NOT_FOUND} == 1 )) &&
-function command_not_found_handler () {
+function command_not_found_handler {
     emulate -L zsh
     if [[ -x ${GRML_ZSH_CNF_HANDLER} ]] ; then
         ${GRML_ZSH_CNF_HANDLER} $1
@@ -1607,7 +1513,7 @@ DIRSTACKFILE=${DIRSTACKFILE:-${ZDOTDIR:-${HOME}}/.zdirs}
 
 if zstyle -T ':grml:chpwd:dirstack' enable; then
     typeset -gaU GRML_PERSISTENT_DIRSTACK
-    function grml_dirstack_filter () {
+    function grml_dirstack_filter {
         local -a exclude
         local filter entry
         if zstyle -s ':grml:chpwd:dirstack' filter filter; then
@@ -1621,7 +1527,7 @@ if zstyle -T ':grml:chpwd:dirstack' enable; then
         return 1
     }
 
-    function chpwd () {
+    function chpwd {
         (( ZSH_SUBSHELL )) && return
         (( $DIRSTACKSIZE <= 0 )) && return
         [[ -z $DIRSTACKFILE ]] && return
@@ -1667,7 +1573,7 @@ if is433 ; then
 #   chpwd_profiles
 #
 # For details see the `grmlzshrc.5' manual page.
-function chpwd_profiles () {
+function chpwd_profiles {
     local profile context
     local -i reexecute
 
@@ -1747,7 +1653,7 @@ PS4='+%N:%i:%_> '
 
 # display battery status on right side of prompt using 'GRML_DISPLAY_BATTERY=1' in .zshrc.pre
 
-function battery () {
+function battery {
 if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
     if islinux ; then
         batterylinux
@@ -1764,7 +1670,7 @@ if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
 fi
 }
 
-function batterylinux () {
+function batterylinux {
 GRML_BATTERY_LEVEL=''
 local batteries bat capacity
 batteries=( /sys/class/power_supply/BAT*(N) )
@@ -1797,7 +1703,7 @@ if (( $#batteries > 0 )) ; then
 fi
 }
 
-function batteryopenbsd () {
+function batteryopenbsd {
 GRML_BATTERY_LEVEL=''
 local bat batfull batwarn batnow num
 for num in 0 1 ; do
@@ -1826,7 +1732,7 @@ for num in 0 1 ; do
 done
 }
 
-function batteryfreebsd () {
+function batteryfreebsd {
 GRML_BATTERY_LEVEL=''
 local num
 local -A table
@@ -1853,7 +1759,7 @@ for num in 0 1 ; do
 done
 }
 
-function batterydarwin () {
+function batterydarwin {
 GRML_BATTERY_LEVEL=''
 local -a table
 table=( ${$(pmset -g ps)[(w)7,8]%%(\%|);} )
@@ -1889,7 +1795,7 @@ if zrcautoload vcs_info; then
     # function, which can cause a lot of trouble with our directory-based
     # profiles. So:
     if [[ ${ZSH_VERSION} == 4.3.<-10> ]] ; then
-        function VCS_INFO_realpath () {
+        function VCS_INFO_realpath {
             setopt localoptions NO_shwordsplit chaselinks
             ( builtin cd -q $1 2> /dev/null && pwd; )
         }
@@ -1919,7 +1825,7 @@ grml_vcs_coloured_formats=(
 
 typeset GRML_VCS_COLOUR_MODE=xxx
 
-function grml_vcs_info_toggle_colour () {
+function grml_vcs_info_toggle_colour {
     emulate -L zsh
     if [[ $GRML_VCS_COLOUR_MODE == plain ]]; then
         grml_vcs_info_set_formats coloured
@@ -1929,7 +1835,7 @@ function grml_vcs_info_toggle_colour () {
     return 0
 }
 
-function grml_vcs_info_set_formats () {
+function grml_vcs_info_set_formats {
     emulate -L zsh
     #setopt localoptions xtrace
     local mode=$1 AF F BF
@@ -1971,7 +1877,7 @@ fi
 # contain. The main source of documentation is the `prompt_grml_help' function
 # below, which gets called when the user does this: prompt -h grml
 
-function prompt_grml_help () {
+function prompt_grml_help {
     <<__EOF0__
   prompt grml
 
@@ -2041,7 +1947,7 @@ function prompt_grml_help () {
 __EOF0__
 }
 
-function prompt_grml-chroot_help () {
+function prompt_grml-chroot_help {
     <<__EOF0__
   prompt grml-chroot
 
@@ -2055,7 +1961,7 @@ function prompt_grml-chroot_help () {
 __EOF0__
 }
 
-function prompt_grml-large_help () {
+function prompt_grml-large_help {
     <<__EOF0__
   prompt grml-large
 
@@ -2072,7 +1978,7 @@ function prompt_grml-large_help () {
 __EOF0__
 }
 
-function grml_prompt_setup () {
+function grml_prompt_setup {
     emulate -L zsh
     autoload -Uz vcs_info
     # The following autoload is disabled for now, since this setup includes a
@@ -2082,15 +1988,15 @@ function grml_prompt_setup () {
     add-zsh-hook precmd prompt_$1_precmd
 }
 
-function prompt_grml_setup () {
+function prompt_grml_setup {
     grml_prompt_setup grml
 }
 
-function prompt_grml-chroot_setup () {
+function prompt_grml-chroot_setup {
     grml_prompt_setup grml-chroot
 }
 
-function prompt_grml-large_setup () {
+function prompt_grml-large_setup {
     grml_prompt_setup grml-large
 }
 
@@ -2165,7 +2071,7 @@ grml_prompt_token_default=(
     vcs               '0'
 )
 
-function grml_theme_has_token () {
+function grml_theme_has_token {
     if (( ARGC != 1 )); then
         printf 'usage: grml_theme_has_token <name>\n'
         return 1
@@ -2173,7 +2079,7 @@ function grml_theme_has_token () {
     (( ${+grml_prompt_token_default[$1]} ))
 }
 
-function GRML_theme_add_token_usage () {
+function GRML_theme_add_token_usage {
     <<__EOF0__
   Usage: grml_theme_add_token <name> [-f|-i] <token/function> [<pre> <post>]
 
@@ -2208,7 +2114,7 @@ function GRML_theme_add_token_usage () {
 
     Another example would be support for \$VIRTUAL_ENV:
 
-      function virtual_env_prompt () {
+      function virtual_env_prompt {
         REPLY=\${VIRTUAL_ENV+\${VIRTUAL_ENV:t} }
       }
       grml_theme_add_token virtual-env -f virtual_env_prompt
@@ -2218,7 +2124,7 @@ function GRML_theme_add_token_usage () {
 __EOF0__
 }
 
-function grml_theme_add_token () {
+function grml_theme_add_token {
     emulate -L zsh
     local name token pre post
     local -i init funcall
@@ -2283,7 +2189,7 @@ grml_theme_add_token: Token `%s'\'' exists! Giving up!\n\n' $name
     fi
 }
 
-function grml_wrap_reply () {
+function grml_wrap_reply {
     emulate -L zsh
     local target="$1"
     local new="$2"
@@ -2297,7 +2203,7 @@ function grml_wrap_reply () {
     fi
 }
 
-function grml_prompt_addto () {
+function grml_prompt_addto {
     emulate -L zsh
     local target="$1"
     local lr it apre apost new v REPLY
@@ -2368,7 +2274,7 @@ function grml_prompt_addto () {
     fi
 }
 
-function prompt_grml_precmd () {
+function prompt_grml_precmd {
     emulate -L zsh
     local grmltheme=grml
     local -a left_items right_items
@@ -2378,7 +2284,7 @@ function prompt_grml_precmd () {
     prompt_grml_precmd_worker
 }
 
-function prompt_grml-chroot_precmd () {
+function prompt_grml-chroot_precmd {
     emulate -L zsh
     local grmltheme=grml-chroot
     local -a left_items right_items
@@ -2388,7 +2294,7 @@ function prompt_grml-chroot_precmd () {
     prompt_grml_precmd_worker
 }
 
-function prompt_grml-large_precmd () {
+function prompt_grml-large_precmd {
     emulate -L zsh
     local grmltheme=grml-large
     local -a left_items right_items
@@ -2399,7 +2305,7 @@ function prompt_grml-large_precmd () {
     prompt_grml_precmd_worker
 }
 
-function prompt_grml_precmd_worker () {
+function prompt_grml_precmd_worker {
     emulate -L zsh
     local -i vcscalled=0
 
@@ -2409,7 +2315,7 @@ function prompt_grml_precmd_worker () {
     fi
 }
 
-function grml_prompt_fallback () {
+function grml_prompt_fallback {
     setopt prompt_subst
     local p0 p1
 
@@ -2432,7 +2338,7 @@ if zrcautoload promptinit && promptinit 2>/dev/null ; then
 else
     print 'Notice: no promptinit available :('
     grml_prompt_fallback
-    function precmd () { (( ${+functions[vcs_info]} )) && vcs_info; }
+    function precmd { (( ${+functions[vcs_info]} )) && vcs_info; }
 fi
 
 if is437; then
@@ -2465,19 +2371,19 @@ if is437; then
     fi
 else
     grml_prompt_fallback
-    function precmd () { (( ${+functions[vcs_info]} )) && vcs_info; }
+    function precmd { (( ${+functions[vcs_info]} )) && vcs_info; }
 fi
 
 # Terminal-title wizardry
 
-function ESC_print () {
+function ESC_print {
     info_print $'\ek' $'\e\\' "$@"
 }
-function set_title () {
+function set_title {
     info_print  $'\e]0;' $'\a' "$@"
 }
 
-function info_print () {
+function info_print {
     local esc_begin esc_end
     esc_begin="$1"
     esc_end="$2"
@@ -2487,7 +2393,7 @@ function info_print () {
     printf '%s' "${esc_end}"
 }
 
-function grml_reset_screen_title () {
+function grml_reset_screen_title {
     # adjust title of xterm
     # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
     [[ ${NOTITLE:-} -gt 0 ]] && return 0
@@ -2498,7 +2404,7 @@ function grml_reset_screen_title () {
     esac
 }
 
-function grml_vcs_to_screen_title () {
+function grml_vcs_to_screen_title {
     if [[ $TERM == screen* ]] ; then
         if [[ -n ${vcs_info_msg_1_} ]] ; then
             ESC_print ${vcs_info_msg_1_}
@@ -2508,14 +2414,14 @@ function grml_vcs_to_screen_title () {
     fi
 }
 
-function grml_maintain_name () {
+function grml_maintain_name {
     # set hostname if not running on host with name 'grml'
     if [[ -n "$HOSTNAME" ]] && [[ "$HOSTNAME" != $(hostname) ]] ; then
        NAME="@$HOSTNAME"
     fi
 }
 
-function grml_cmd_to_screen_title () {
+function grml_cmd_to_screen_title {
     # get the name of the program currently running and hostname of local
     # machine set screen window title if running in a screen
     if [[ "$TERM" == screen* ]] ; then
@@ -2524,7 +2430,7 @@ function grml_cmd_to_screen_title () {
     fi
 }
 
-function grml_control_xterm_title () {
+function grml_control_xterm_title {
     case $TERM in
         (xterm*|rxvt*)
             set_title "${(%):-"%n@%m:"}" "$2"
@@ -2535,7 +2441,7 @@ function grml_control_xterm_title () {
 # The following autoload is disabled for now, since this setup includes a
 # static version of the ‘add-zsh-hook’ function above. It needs to be
 # re-enabled as soon as that static definition is removed again.
-#zrcautoload add-zsh-hook || add-zsh-hook () { :; }
+#zrcautoload add-zsh-hook || add-zsh-hook { :; }
 if [[ $NOPRECMD -eq 0 ]]; then
     add-zsh-hook precmd grml_reset_screen_title
     add-zsh-hook precmd grml_vcs_to_screen_title
@@ -2610,7 +2516,7 @@ alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
 
 # make sure it is not assigned yet
 [[ -n ${aliases[utf2iso]} ]] && unalias utf2iso
-function utf2iso () {
+function utf2iso {
     if isutfenv ; then
         local ENV
         for ENV in $(env | command grep -i '.utf') ; do
@@ -2621,7 +2527,7 @@ function utf2iso () {
 
 # make sure it is not assigned yet
 [[ -n ${aliases[iso2utf]} ]] && unalias iso2utf
-function iso2utf () {
+function iso2utf {
     if ! isutfenv ; then
         local ENV
         for ENV in $(env | command grep -i '\.iso') ; do
@@ -2632,12 +2538,12 @@ function iso2utf () {
 
 # especially for roadwarriors using GNU screen and ssh:
 if ! check_com asc &>/dev/null ; then
-  function asc () { autossh -t "$@" 'screen -RdU' }
+  function asc { autossh -t "$@" 'screen -RdU' }
   compdef asc=ssh
 fi
 
 #f1# Hints for the use of zsh on grml
-function zsh-help () {
+function zsh-help {
     print "$bg[white]$fg[black]
 zsh-help - hints for use of zsh on grml
 =======================================$reset_color"
@@ -2767,7 +2673,7 @@ fi
 # if cdrecord is a symlink (to wodim) or isn't present at all warn:
 if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
     if check_com -c wodim; then
-        function cdrecord () {
+        function cdrecord {
             <<__EOF0__
 cdrecord is not provided under its original name by Debian anymore.
 See #377109 in the BTS of Debian for more details.
@@ -2785,10 +2691,10 @@ if isgrmlcd; then
 fi
 
 # grmlstuff
-function grmlstuff () {
+function grmlstuff {
 # people should use 'grml-x'!
     if check_com -c 915resolution; then
-        function 855resolution () {
+        function 855resolution {
             echo "Please use 915resolution as resolution modifying tool for Intel \
 graphic chipset."
             return -1
@@ -2799,7 +2705,7 @@ graphic chipset."
     alias grml-version='cat /etc/grml_version'
 
     if check_com -c grml-debootstrap ; then
-        function debian2hd () {
+        function debian2hd {
             echo "Installing debian to harddisk is possible by using grml-debootstrap."
             return 1
         }
@@ -2821,7 +2727,7 @@ is4 && xsource "/etc/zsh/keephack"
 # This lists all the files in the current directory newer than the reference file.
 # You can also specify the reference file inline; note quotes:
 # $ ls -l *(e:'nt ~/.zshenv':)
-is4 && function nt () {
+is4 && function nt {
     if [[ -n $1 ]] ; then
         local NTREF=${~1}
     fi
@@ -2831,7 +2737,7 @@ is4 && function nt () {
 # shell functions
 
 #f1# Reload an autoloadable function
-function freload () { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
+function freload { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 compdef _functions freload
 
 #
@@ -2874,7 +2780,7 @@ compdef _functions freload
 #      2 symlink loop detected
 #
 #f1# List symlinks in detail (more detailed version of 'readlink -f', 'whence -s' and 'namei -l')
-function sll () {
+function sll {
     if [[ -z ${1} ]] ; then
         printf 'Usage: %s <symlink(s)>\n' "${0}"
         return 1
@@ -2933,7 +2839,7 @@ function sll () {
 # with respect to wordsplitting. (ie. ${=PAGER})
 if check_com -c $PAGER ; then
     #f3# View Debian's changelog of given package(s)
-    function dchange () {
+    function dchange {
         emulate -L zsh
         [[ -z "$1" ]] && printf 'Usage: %s <package_name(s)>\n' "$0" && return 1
 
@@ -2958,11 +2864,11 @@ if check_com -c $PAGER ; then
             fi
         done
     }
-    function _dchange () { _files -W /usr/share/doc -/ }
+    function _dchange { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
 
     #f3# View Debian's NEWS of a given package
-    function dnews () {
+    function dnews {
         emulate -L zsh
         if [[ -r /usr/share/doc/$1/NEWS.Debian.gz ]] ; then
             $PAGER /usr/share/doc/$1/NEWS.Debian.gz
@@ -2975,11 +2881,11 @@ if check_com -c $PAGER ; then
             fi
         fi
     }
-    function _dnews () { _files -W /usr/share/doc -/ }
+    function _dnews { _files -W /usr/share/doc -/ }
     compdef _dnews dnews
 
     #f3# View Debian's copyright of a given package
-    function dcopyright () {
+    function dcopyright {
         emulate -L zsh
         if [[ -r /usr/share/doc/$1/copyright ]] ; then
             $PAGER /usr/share/doc/$1/copyright
@@ -2988,11 +2894,11 @@ if check_com -c $PAGER ; then
             return 1
         fi
     }
-    function _dcopyright () { _files -W /usr/share/doc -/ }
+    function _dcopyright { _files -W /usr/share/doc -/ }
     compdef _dcopyright dcopyright
 
     #f3# View upstream's changelog of a given package
-    function uchange () {
+    function uchange {
         emulate -L zsh
         if [[ -r /usr/share/doc/$1/changelog.gz ]] ; then
             $PAGER /usr/share/doc/$1/changelog.gz
@@ -3001,23 +2907,23 @@ if check_com -c $PAGER ; then
             return 1
         fi
     }
-    function _uchange () { _files -W /usr/share/doc -/ }
+    function _uchange { _files -W /usr/share/doc -/ }
     compdef _uchange uchange
 fi
 
 # zsh profiling
-function profile () {
+function profile {
     ZSH_PROFILE_RC=1 zsh "$@"
 }
 
 #f1# Edit an alias via zle
-function edalias () {
+function edalias {
     [[ -z "$1" ]] && { echo "Usage: edalias <alias_to_edit>" ; return 1 } || vared aliases'[$1]' ;
 }
 compdef _aliases edalias
 
 #f1# Edit a function via zle
-function edfunc () {
+function edfunc {
     [[ -z "$1" ]] && { echo "Usage: edfunc <function_to_edit>" ; return 1 } || zed -f "$1" ;
 }
 compdef _functions edfunc
@@ -3030,7 +2936,7 @@ compdef _functions edfunc
 #m# f6 Force-Reload() \kbd{service \em{process}}\quad\kbd{force-reload}
 #m# f6 Status() \kbd{service \em{process}}\quad\kbd{status}
 if [[ -d /etc/init.d || -d /etc/service ]] ; then
-    function __start_stop () {
+    function __start_stop {
         local action_="${1:l}"  # e.g Start/Stop/Restart
         local service_="$2"
         local param_="$3"
@@ -3058,21 +2964,21 @@ if [[ -d /etc/init.d || -d /etc/service ]] ; then
         fi
     }
 
-    function _grmlinitd () {
+    function _grmlinitd {
         local -a scripts
         scripts=( /etc/init.d/*(x:t) )
         _describe "service startup script" scripts
     }
 
     for i in Start Restart Stop Force-Reload Reload Status ; do
-        eval "function $i () { __start_stop $i \"\$1\" \"\$2\" ; }"
+        eval "function $i { __start_stop $i \"\$1\" \"\$2\" ; }"
         compdef _grmlinitd $i
     done
     builtin unset -v i
 fi
 
 #f1# Provides useful information on globbing
-function H-Glob () {
+function H-Glob {
     echo -e "
     /      directories
     .      plain files
@@ -3113,7 +3019,7 @@ function H-Glob () {
 alias help-zshglob=H-Glob
 
 # grep for running process, like: 'any vim'
-function any () {
+function any {
     emulate -L zsh
     unsetopt KSH_ARRAYS
     if [[ -z "$1" ]] ; then
@@ -3128,7 +3034,7 @@ function any () {
 # After resuming from suspend, system is paging heavily, leading to very bad interactivity.
 # taken from $LINUX-KERNELSOURCE/Documentation/power/swsusp.txt
 [[ -r /proc/1/maps ]] && \
-function deswap () {
+function deswap {
     print 'Reading /proc/[0-9]*/maps and sending output to /dev/null, this might take a while.'
     cat $(sed -ne 's:.* /:/:p' /proc/[0-9]*/maps | sort -u | grep -v '^/dev/')  > /dev/null
     print 'Finished, running "swapoff -a; swapon -a" may also be useful.'
@@ -3142,7 +3048,7 @@ function deswap () {
 #       This will cause vim to send every file given on the
 #       commandline to be send to it's own tab (needs vim7).
 if check_com vim; then
-    function vim () {
+    function vim {
         VIM_PLEASE_SET_TITLE='yes' command vim ${VIM_OPTIONS} "$@"
     }
 fi
@@ -3160,7 +3066,7 @@ for sh in ${ssl_hashes}; do
     }'
 done; unset sh
 
-function ssl-cert-fingerprints () {
+function ssl-cert-fingerprints {
     emulate -L zsh
     local i
     if [[ -z $1 ]] ; then
@@ -3172,7 +3078,7 @@ function ssl-cert-fingerprints () {
     done
 }
 
-function ssl-cert-info () {
+function ssl-cert-info {
     emulate -L zsh
     if [[ -z $1 ]] ; then
         printf 'usage: ssl-cert-info <file>\n'
@@ -3271,7 +3177,7 @@ fi
 # useful functions
 
 #f5# Backup \kbd{file_or_folder {\rm to} file_or_folder\_timestamp}
-function bk () {
+function bk {
     emulate -L zsh
     local current_date=$(date -u "+%Y%m%dT%H%M%SZ")
     local clean keep move verbose result all to_bk
@@ -3346,13 +3252,13 @@ return 0;;
 }
 
 #f5# cd to directory and list files
-function cl () {
+function cl {
     emulate -L zsh
     cd $1 && ls -a
 }
 
 # smart cd function, allows switching to /etc when running 'cd /etc/fstab'
-function cd () {
+function cd {
     if (( ${#argv} == 1 )) && [[ -f ${1} ]]; then
         [[ ! -e ${1:h} ]] && return 1
         print "Correcting ${1} to ${1:h}"
@@ -3363,7 +3269,7 @@ function cd () {
 }
 
 #f5# Create Directory and \kbd{cd} to it
-function mkcd () {
+function mkcd {
     if (( ARGC != 1 )); then
         printf 'usage: mkcd <new-directory>\n'
         return 1;
@@ -3377,25 +3283,25 @@ function mkcd () {
 }
 
 #f5# Create temporary directory and \kbd{cd} to it
-function cdt () {
+function cdt {
     builtin cd "$(mktemp -d)"
     builtin pwd
 }
 
 #f5# List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
-function accessed () {
+function accessed {
     emulate -L zsh
     print -l -- *(a-${1:-1})
 }
 
 #f5# List files which have been changed within the last {\it n} days, {\it n} defaults to 1
-function changed () {
+function changed {
     emulate -L zsh
     print -l -- *(c-${1:-1})
 }
 
 #f5# List files which have been modified within the last {\it n} days, {\it n} defaults to 1
-function modified () {
+function modified {
     emulate -L zsh
     print -l -- *(m-${1:-1})
 }
@@ -3421,7 +3327,7 @@ fi
 #  $ awk -F ':' '{ print $2" : "$1" "$3 }' \
 #    /usr/local/lib/words/en-de.ISO-8859-1.vok > ~/.translate/de-en.ISO-8859-1.vok
 #f5# Translates a word
-function trans () {
+function trans {
     emulate -L zsh
     case "$1" in
         -[dD]*)
@@ -3440,7 +3346,7 @@ function trans () {
 # Usage: simple-extract <file>
 # Using option -d deletes the original archive file.
 #f5# Smart archive extractor
-function simple-extract () {
+function simple-extract {
     emulate -L zsh
     setopt extended_glob noclobber
     local ARCHIVE DELETE_ORIGINAL DECOMP_CMD USES_STDIN USES_STDOUT GZTARGET WGET_CMD
@@ -3577,13 +3483,13 @@ function simple-extract () {
     return $RC
 }
 
-function __archive_or_uri () {
+function __archive_or_uri {
     _alternative \
         'files:Archives:_files -g "*.(#l)(tar.bz2|tbz2|tbz|tar.gz|tgz|tar.xz|txz|tar.lzma|tar|rar|lzh|7z|zip|jar|deb|bz2|gz|Z|xz|lzma)"' \
         '_urls:Remote Archives:_urls'
 }
 
-function _simple_extract () {
+function _simple_extract {
     _arguments \
         '-d[delete original archivefile after extraction]' \
         '*:Archive Or Uri:__archive_or_uri'
@@ -3592,7 +3498,7 @@ compdef _simple_extract simple-extract
 [[ -n "$GRML_NO_SMALL_ALIASES" ]] || alias se=simple-extract
 
 #f5# Change the xterm title from within GNU-screen
-function xtrename () {
+function xtrename {
     emulate -L zsh
     if [[ $1 != "-f" ]] ; then
         if [[ -z ${DISPLAY} ]] ; then
@@ -3615,7 +3521,7 @@ function xtrename () {
 
 # Create small urls via http://goo.gl using curl(1).
 # API reference: https://code.google.com/apis/urlshortener/
-function zurl () {
+function zurl {
     emulate -L zsh
     setopt extended_glob
 
@@ -3659,7 +3565,7 @@ function zurl () {
 }
 
 #f2# Find history events by search pattern and list them by date.
-function whatwhen () {
+function whatwhen {
     emulate -L zsh
     local usage help ident format_l format_s first_char remain first last
     usage='USAGE: whatwhen [options] <searchstring> <search range>'
@@ -3711,7 +3617,7 @@ if check_com -c hg ; then
     # gnu like diff for mercurial
     # http://www.selenic.com/mercurial/wiki/index.cgi/TipsAndTricks
     #f5# GNU like diff for mercurial
-    function hgdi () {
+    function hgdi {
         emulate -L zsh
         local i
         for i in $(hg status -marn "$@") ; diff -ubwd <(hg cat "$i") "$i"
@@ -3728,7 +3634,7 @@ if check_com -c hg ; then
     #   hgstat      => display diffstat between last revision and tip
     #   hgstat 1234 => display diffstat between revision 1234 and tip
     #f5# Diffstat for specific version of a mercurial repos
-    function hgstat () {
+    function hgstat {
         emulate -L zsh
         [[ -n "$1" ]] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
     }
@@ -3764,13 +3670,13 @@ if (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall ; then
 
     # See https://github.com/grml/grml/issues/56
     if ! [[ -x ${commands[dig]} ]]; then
-        function dig_after_all () {
+        function dig_after_all {
             unfunction dig
             unfunction _dig
             autoload -Uz _dig
             unfunction dig_after_all
         }
-        function dig () {
+        function dig {
             if [[ -x ${commands[dig]} ]]; then
                 dig_after_all
                 command dig "$@"
@@ -3780,7 +3686,7 @@ if (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall ; then
             printf 'Try `drill'\'' as a light weight alternative.\n'
             return 0
         }
-        function _dig () {
+        function _dig {
             if [[ -x ${commands[dig]} ]]; then
                 dig_after_all
                 zle -M 'Found `dig'\'' installed. '
