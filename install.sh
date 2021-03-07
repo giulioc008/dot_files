@@ -962,13 +962,13 @@ sudo ln -f -s "${path}/.vim" "/root/.vim"
 ln -f -s "${path}/.gitconfig" "${HOME}/.gitconfig"									# link the Git's configuration files
 sudo ln -f -s "${path}/.gitconfig" "/root/.gitconfig"
 
-for i in $(ls "${path}/.config/")													# link the personal configuration files
+for i in $(ls "${path}/.config/" 2> /dev/null)										# link the personal configuration files
 do
 	ln -f -s "${path}/.config/${i}" "${HOME}/.config/${i}"
 	sudo ln -f -s "${path}/.config/${i}" "/root/.config/${i}"
 done
 
-for i in $(ls "${path}/desktop_entries/")											# link the personal desktop entries
+for i in $(ls "${path}/desktop_entries/" 2> /dev/null)								# link the personal desktop entries
 do
 	cp "${path}/desktop_entries/${i}" "${HOME}/Desktop/${i}"
 	sudo cp "${path}/desktop_entries/${i}" "/root/Desktop/${i}"

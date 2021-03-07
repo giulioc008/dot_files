@@ -3718,11 +3718,6 @@ zrclocal
 red_background='\[\e[41m\]'
 white='\[\e[0;37m\]'
 
-## Aliases
-alias cd..='cd ..'
-alias hystory='history'
-alias ls='ls -A --color=auto'
-
 ## Code that must be execute when the shell is opened
 export NVM_DIR="$HOME/.nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 							# This loads nvm
@@ -3738,6 +3733,7 @@ then
 	#source "${path}/pacman.sh"													# include the Shell Script that manage pacman
 	#source "${path}/aur.sh"													# include the Shell Script that manage AUR
 
+	source "${path}/alias.sh"													# include the Shell Script that define the aliases
 	source "${path}/git.sh"														# include the Shell Script that manage git
 	source "${path}/kill.sh"													# include the Shell Script that manage the background processes
 else
@@ -3747,6 +3743,7 @@ else
 	#source ~/Documents/GitHub/dot_files/pacman.sh								# include the Shell Script that manage pacman
 	#source ~/Documents/GitHub/dot_files/aur.sh									# include the Shell Script that manage AUR
 
+	source ~/Documents/GitHub/dot_files/alias.sh								# include the Shell Script that define the aliases
 	source ~/Documents/GitHub/dot_files/git.sh									# include the Shell Script that manage git
 	source ~/Documents/GitHub/dot_files/kill.sh									# include the Shell Script that manage the background processes
 fi
