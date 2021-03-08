@@ -1,1 +1,0 @@
-/home/giulio/Documents/GitHub/dot_files_ArchLinux/.vim
