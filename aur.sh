@@ -15,7 +15,7 @@ function aur-list-installed {
 
 # Clear unneeded dipendecies
 function aur-clear {
-	sudo yay -Yc
+	yay -Yc
 }
 
 # Remove packages, their dependencies not required and configurations
@@ -26,12 +26,12 @@ function aur-remove {
 
 # Upgrade all AUR packages
 function aur-upgrade {
-	# if the OS have KDE as DE (desktop enviroment), I suggest you to add, previous "sudo yay -Sua" the string "sudo pkcon refresh; sudo pkcon update; "
-	sudo yay -Sua; aur-clear
+	# if the OS have KDE as DE (desktop enviroment), I suggest you to add, previous "yay -Sua" the string "sudo pkcon refresh; sudo pkcon update; "
+	yay -Sua; aur-clear
 }
 
 # Install from AUR or repository
 function aur-install {
 	# the parameter $* is the list of package that you want remove
-	sudo yay -S $*
+	yay -S $*
 }
